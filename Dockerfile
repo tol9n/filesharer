@@ -19,16 +19,13 @@ RUN apt-get update && apt-get install -y curl build-essential \
 WORKDIR /app
 
 # Копируем только файлы зависимостей (для кэширования)
-COPY pyproject.toml poetry.lock* /app/
+COPY . .
 
 # Устанавливаем зависимости
-RUN poetry install --no-interaction --no-ansi
-
-# Копируем остальной код
-COPY . .
+RUN poetry install --no-interaction --no-ansi --no-root
 
 # Открываем порт
 EXPOSE 8000
 
 # Запуск FastAPI через uvicorn
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
